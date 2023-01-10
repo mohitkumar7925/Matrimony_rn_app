@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "326263554036",
+    "project_id": "matrimony-6b345",
+    "storage_bucket": "matrimony-6b345.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:326263554036:android:ddc1f65f60375c0245c3a1",
+        "android_client_info": {
+          "package_name": "com.matrimony.mohit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "326263554036-v5frfa0t018derig3tb6corrb7p86659.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD5lbrn0eMfksQlvgiKrj0qc8l9PDvD4uo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "326263554036-v5frfa0t018derig3tb6corrb7p86659.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
