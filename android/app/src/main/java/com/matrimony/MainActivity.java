@@ -1,4 +1,4 @@
-package com.matrimony;
+package com.matrimony.mohit;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;

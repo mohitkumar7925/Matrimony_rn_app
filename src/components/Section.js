@@ -10,7 +10,7 @@ export const Section = ({title, children , style}) => {
         style={{
           ...fonts.t_bo,
           marginTop: 15,
-          fontSize:18
+          fontSize:16
         }}>
         {title}
       </Text>

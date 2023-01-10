@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import Colors from '../values/Colors';
+import fonts from '../values/styles';
 
 
-const DropdownComponent = ({data  , placeholder}) => {
+const DropdownComponent = ({data  , placeholder , onValueChange }) => {
   const [value, setValue] = useState(null);
   const [isFocus, setIsFocus] = useState(false);
 
@@ -28,7 +29,7 @@ const DropdownComponent = ({data  , placeholder}) => {
         selectedTextStyle={styles.selectedTextStyle}
         inputSearchStyle={styles.inputSearchStyle}
         iconStyle={styles.iconStyle}
-        
+        itemTextStyle={styles.itemTextStyle}
         data={data}
         search
         maxHeight={300}
@@ -40,7 +41,7 @@ const DropdownComponent = ({data  , placeholder}) => {
         onFocus={() => setIsFocus(true)}
         onBlur={() => setIsFocus(false)}
         onChange={item => {
-          setValue(item.value);
+          onValueChange(item)
           setIsFocus(false);
         }}
       />
@@ -66,6 +67,11 @@ const styles = StyleSheet.create({
   icon: {
     marginRight: 5,
   },
+  itemTextStyle:{
+
+    color:'black',
+    ...fonts.t_m
+  },
   label: {
     position: 'absolute',
     backgroundColor: 'white',
@@ -77,9 +83,12 @@ const styles = StyleSheet.create({
   },
   placeholderStyle: {
     fontSize: 16,
+    ...fonts.t_m
   },
   selectedTextStyle: {
     fontSize: 16,
+    color:'black',
+    ...fonts.t_m
   },
   iconStyle: {
     width: 20,

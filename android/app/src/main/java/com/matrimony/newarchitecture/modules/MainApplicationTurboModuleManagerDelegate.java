@@ -1,4 +1,4 @@
-package com.matrimony.newarchitecture.modules;
+package com.matrimony.mohit.newarchitecture.modules;
 
 import com.facebook.jni.HybridData;
 import com.facebook.react.ReactPackage;

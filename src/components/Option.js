@@ -10,12 +10,12 @@ export const Option = ({selected, text, onPress, children, style}) => {
       <Chip
         style={{
           borderRadius: 20,
-          marginRight: 15,
+          marginRight: 10,
           marginBottom:10,
           borderColor: Colors.button ,
           borderWidth: selected ? 1 : 0,
-          
-          ...style,
+        
+          ...style
         }}
         textStyle={{
             ...fonts.t_m

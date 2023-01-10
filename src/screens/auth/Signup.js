@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {createRef, useRef, useState} from 'react';
 import {Dimensions, Image, Text, TouchableOpacity, View} from 'react-native';
 import {Chip, TextInput} from 'react-native-paper';
 import {Button} from '../../components/Button';
@@ -14,78 +14,94 @@ import DatePicker from 'react-native-date-picker';
 import DropdownComponent from '../../components/Dropdown';
 import {Denomination_data} from '../../values/Static_data';
 
-export const Signup = ({navigation}) => {
+export const Signup = ({navigation, route}) => {
+  let profile = route?.params?.profile;
   const width = Dimensions.get('window').width;
   const married_values = ['Unmarried', 'Widower', 'Separated', 'Divorced'];
   const gender_values = ['Male', 'Female'];
   const [date_modal, setDate_modal] = useState(false);
   const [s_date, setS_date] = useState('');
+  // let refs = {
+  //   name:createRef(),
+  //   father_name:createRef(),
+  //   mother_name:createRef(),
+  //   email:createRef(),
+  //   password:createRef(),
+  //   mobile:createRef(),
+  //   division:createRef()
+  // };
+
+  // const nextFocus = value => {
+  //   refs[value].current.focus();
+  // };
 
   const [user, setUser] = useState({
-    marital: married_values[0],
-    gender: gender_values[0],
-    name: '',
-    dob: '',
-    email: '',
-    mobile: '',
-    password: '',
-    division: '',
-    denomation: '',
+    marital: profile?.marital_status || married_values[0],
+    gender: profile?.gender || gender_values[0],
+    name: profile?.name || '',
+    dob: profile?.dob || '',
+    age: profile?.age || '',
+    email: profile?.email || '',
+    mobile: profile?.mobile || '',
+    password: profile?.password || '',
+    division: profile?.division || '',
+    denomination: profile?.denomination || '',
+    father_name: profile?.father_name || '',
+    mother_name: profile?.mother_name || '',
   });
 
-  let dmy =
-    '(((0[1-9])|([12][0-9])|(3[01]))-((0[0-9])|(1[012]))-((20[012]d|19dd)|(1d|2[0123])))';
+  const validateEmail = email => {
+    return String(email)
+      .toLowerCase()
+      .match(
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+      );
+  };
 
   const submit = () => {
+    // navigation.navigate('Residence')
+    console.log(user);
     let {
-      denomation,
+      denomination,
       dob,
       division,
       email,
       gender,
       marital,
+      age,
       mobile,
       name,
       password,
+      father_name,
+      mother_name,
     } = user;
 
-    if(
-      denomation != '' &&
-      dob != '' &&
-      division != '' &&
-      email != '' &&
-      gender != '' &&
-      marital != '' &&
-      mobile != '' &&
-      name != '' &&
-      password != '' 
-      
-    ){
-
-
-
-
-
-
-
-
-
-
+    if (
+      (denomination != '' &&
+        dob != '' &&
+        division != '' &&
+        email != '' &&
+        age != '') ||
+      (age != '0' &&
+        mobile != '' &&
+        name != '' &&
+        password != '' &&
+        father_name != '' &&
+        mother_name != '')
+    ) {
+      if (mobile.length > 9) {
+        if (validateEmail(email)) {
+          // alert('done')
+          navigation.navigate('Residence', {...route.params, data: user});
+        } else {
+          alert('Please enter valid email ID');
+        }
+      } else {
+        alert('Please enter valid mobile number');
+      }
+    } else {
+      alert('Please enter all the details');
     }
-    else{
-      alert('Please enter all the details')
-
-    }
-
-
-
-
-
-
-
-
-
-
   };
 
   return (
@@ -96,7 +112,9 @@ export const Signup = ({navigation}) => {
           fontSize: 16,
           marginTop: 10,
         }}>
-        Let's Create your profile first
+        {route?.params?.update
+          ? "Let's update your profile"
+          : "Let's Create your profile first"}
       </Text>
 
       <Section title={'Gender'} style={{flexDirection: 'row'}}>
@@ -124,6 +142,7 @@ export const Signup = ({navigation}) => {
       </Section>
 
       <InputBox
+        // onSubmitEditing={() => nextFocus('father_name')}
         value={user.name}
         onChange={val =>
           setUser(prev => {
@@ -133,10 +152,35 @@ export const Signup = ({navigation}) => {
         name={'name'}
         placeholder={'Name'}
       />
+      <InputBox
+        // ref={refs['father_name']}
+        // onSubmitEditing={() => nextFocus('mother_name')}
+        value={user.father_name}
+        onChange={val =>
+          setUser(prev => {
+            return {...prev, father_name: val};
+          })
+        }
+        name={'father name'}
+        placeholder={'Father Name'}
+      />
+      <InputBox
+        // ref={refs['mother_name']}
+        // onSubmitEditing={()=>setDate_modal(true)}
+        blurOnSubmit={false}
+        value={user.mother_name}
+        onChange={val =>
+          setUser(prev => {
+            return {...prev, mother_name: val};
+          })
+        }
+        name={'name'}
+        placeholder={'Mother Name'}
+      />
 
       <TouchableOpacity onPress={() => setDate_modal(true)}>
         <TextInput
-          value={s_date?.toString()}
+          value={user?.dob?.toString()}
           editable={false}
           mode="outlined"
           style={{
@@ -146,17 +190,22 @@ export const Signup = ({navigation}) => {
           label={'Date of birth'}
         />
       </TouchableOpacity>
-      {/* <InputBox
-        control={control}
-        errors={errors}
+      <InputBox
+        label={'Age'}
+        value={user.age}
+        placeholder={'eg.25'}
+        maxLength={2}
         keyboardType="numeric"
-        pattern={dmy}
-        label="Date Of Birth"
-        name={'dob'}
-        placeholder={'DD-MM-YYYY'}
-      /> */}
+        onChange={val =>
+          setUser(prev => {
+            return {...prev, age: val};
+          })
+        }
+      />
       <InputBox
         value={user.email}
+        // ref={refs['email']}
+        // onSubmitEditing={() => nextFocus('mobile')}
         onChange={val =>
           setUser(prev => {
             return {...prev, email: val};
@@ -165,29 +214,37 @@ export const Signup = ({navigation}) => {
         name={'email'}
         placeholder={'Email ID'}
       />
+      {!route?.params?.update && (
+        <InputBox
+          // ref={refs['mobile']}
+          // onSubmitEditing={() => nextFocus('password')}
+          value={user.mobile}
+          onChange={val =>
+            setUser(prev => {
+              return {...prev, mobile: val};
+            })
+          }
+          keyboardType="number-pad"
+          maxLength={10}
+          name={'mobile'}
+          placeholder={'Mobile Number'}
+        />
+      )}
       <InputBox
-        value={user.mobile}
-        onChange={val =>
-          setUser(prev => {
-            return {...prev, mobile: val};
-          })
-        }
-        keyboardType="number-pad"
-        maxLength={10}
-        name={'mobile'}
-        placeholder={'Mobile Number'}
-      />
-      <InputBox
+        // ref={refs['password']}
+        // onSubmitEditing={()=>nextFocus('division')}
         value={user.password}
         onChange={val =>
           setUser(prev => {
             return {...prev, password: val};
           })
         }
+        secureTextEntry={true}
         name={'password'}
         placeholder={'Password'}
       />
       <InputBox
+        // ref={refs['division']}
         value={user.division}
         onChange={val =>
           setUser(prev => {
@@ -197,7 +254,15 @@ export const Signup = ({navigation}) => {
         name={'division'}
         placeholder={'Division'}
       />
-      <DropdownComponent data={Denomination_data} placeholder="Denomination" />
+      <DropdownComponent
+        onValueChange={item =>
+          setUser(prev => {
+            return {...prev, denomination: item.value};
+          })
+        }
+        data={Denomination_data}
+        placeholder="Denomination"
+      />
       {/* <InputBox
         control={control}
         errors={errors}
@@ -219,7 +284,26 @@ export const Signup = ({navigation}) => {
         maximumDate={new Date()}
         onConfirm={date => {
           setDate_modal(false);
-          setS_date(date.toLocaleDateString());
+          console.log(
+            date.getFullYear() +
+              '-' +
+              (date.getMonth() + 1) +
+              '-' +
+              date.getDate(),
+          );
+          setUser(prev => {
+            return {
+              ...prev,
+              dob:
+                date.getFullYear() +
+                '-' +
+                (date.getMonth() + 1) +
+                '-' +
+                date.getDate(),
+            };
+          });
+          // nextFocus('email')
+          // setS_date(date.toLocaleDateString());
         }}
         onCancel={() => {
           setDate_modal(false);
